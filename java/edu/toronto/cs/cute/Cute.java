@@ -20,6 +20,7 @@ public class Cute extends Classifier {
   public List<String> classify(String payload) {
     double maxSimilarity = -1.0;
     List<String> bestProtocols = new LinkedList<String>();
+    
     for (Map.Entry<String, Map<String, Double>> wEntry :
     		this.weightedTerm.entrySet()) {
     	String protocol = wEntry.getKey();
