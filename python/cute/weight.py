@@ -1,4 +1,5 @@
-# Copyright 2010 HiPerNet Research Group, University of Toronto.
+# Copyright 2011 HiPerNet Research Group, University of Toronto. All Rights
+# Reserved.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
