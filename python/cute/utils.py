@@ -21,12 +21,14 @@ __author__ = 'Soheil Hassas Yeganeh <soheil@cs.toronto.edu>'
 ESCAPE_TOKEN = '// ESCAPED //'
 
 def extract_payload_and_label_from_csv(csv_path, payload_start_index,
-    payload_end_index, protocol_index, delimiter='|', escape_char='\\',
-    flow_per_protocol=1000):
+    payload_end_index, protocol_index, aggregator_index=None, delimiter='|',
+    escape_char='\\', flow_per_protocol=1000):
   """ Extracts the payload and label from a csv for futher processing. """
   escape_str = escape_char + delimiter
   protocol_to_flow_map = {}
 
+  prev_aggregator = None
+  prev_protocol = None
   for line in open(csv_path):
     line_splitted = line.replace(escape_str, ESCAPE_TOKEN)\
         .split(delimiter)
@@ -39,11 +41,20 @@ def extract_payload_and_label_from_csv(csv_path, payload_start_index,
       protocol_to_flow_map[protocol] = flow_list
     elif len(flow_list) >= flow_per_protocol:
       continue
-    payload = delimiter.join(
+
+    prefix = ''
+    if aggregator_index:
+      aggregator = line_splitted[aggregator_index]
+      if aggregator == prev_aggregator and prev_protocol == protocol:
+        prefix = flow_list.pop()
+      else:
+        prev_aggregator = aggregator
+        prev_protocol = protocol
+
+    payload = delimiter.join([prefix] +
         line_splitted[payload_start_index:payload_end_index])\
         .replace(ESCAPE_TOKEN, escape_str)
-    if len(payload) < 10:
-      continue
+
     flow_list.append(payload)
 
   return protocol_to_flow_map
@@ -51,7 +62,7 @@ def extract_payload_and_label_from_csv(csv_path, payload_start_index,
 def serialize_dataset(dataset):
   for protocol, flows in dataset.iteritems():
     for flow in flows:
-      print flow + '|' + protocol
+      print protocol + '|' + flow
 
 def print_usage():
   print ('USAGE: utils.py -f <payload_start_index> -t <payload_end_index>'
@@ -67,8 +78,9 @@ if __name__ == '__main__':
     sys.exit(-1)
 
 
-  payload_end_index = payload_start_index = protocol_index = -1
-  opts, args = getopt.getopt(sys.argv[1:], 'f:t:p:d:e:n:')
+  payload_end_index = payload_start_index = protocol_index = aggregator_index =\
+      -1
+  opts, args = getopt.getopt(sys.argv[1:], 'f:t:p:a:d:e:n:')
   for opt, value in opts:
     if opt == '-f':
       payload_start_index = int(value)
@@ -76,9 +88,11 @@ if __name__ == '__main__':
       payload_end_index = int(value)
     elif opt == '-p':
       protocol_index = int(value)
+    elif opt == '-a':
+      aggregator_index = int(value)
 
   dataset = extract_payload_and_label_from_csv(args[0],
       payload_start_index, payload_end_index,
-      protocol_index)
+      protocol_index, aggregator_index)
 
   serialize_dataset(dataset)
