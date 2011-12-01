@@ -40,6 +40,8 @@ def extract_payload_and_label_from_csv(csv_path, payload_start_index,
     payload = delimiter.join(
         line_splitted[payload_start_index:payload_end_index])\
         .replace(ESCAPE_TOKEN, escape_str)
+    if len(payload) < 4:
+      continue
     flow_list.append(payload)
 
   return protocol_to_flow_map
