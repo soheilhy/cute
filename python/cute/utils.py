@@ -30,11 +30,7 @@ def extract_payload_and_label_from_csv(csv_path, payload_start_index,
   for line in open(csv_path):
     line_splitted = line.replace(escape_str, ESCAPE_TOKEN)\
         .split(delimiter)
-<<<<<<< HEAD
     if len(line_splitted) <= max(payload_end_index, protocol_index):
-=======
-    if len(line_splitted) <= max(payload_end_index, protocol):
->>>>>>> 0655eab5ac56dd481c1e7c23e2ca5f1ce5cff5c5
       continue
     protocol = line_splitted[protocol_index]
     flow_list = protocol_to_flow_map.get(protocol)
