@@ -18,11 +18,14 @@
 
 __author__ = 'Soheil Hassas Yeganeh <soheil@cs.toronto.edu>'
 
+import re
+
 ESCAPE_TOKEN = '// ESCAPED //'
 
 def extract_payload_and_label_from_csv(csv_path, payload_start_index,
-    payload_end_index, protocol_index, aggregator_index=None, delimiter='|',
-    escape_char='\\', flow_per_protocol=1000):
+    payload_end_index, protocol_index, aggregator_index=None,
+    accept_numerical_payload=False, delimiter='|', escape_char='\\',
+    flow_per_protocol=1000):
   """ Extracts the payload and label from a csv for futher processing. """
   escape_str = escape_char + delimiter
   protocol_to_flow_map = {}
@@ -50,10 +53,11 @@ def extract_payload_and_label_from_csv(csv_path, payload_start_index,
       else:
         prev_aggregator = aggregator
         prev_protocol = protocol
-
-    payload = delimiter.join([prefix] +
-        line_splitted[payload_start_index:payload_end_index])\
-        .replace(ESCAPE_TOKEN, escape_str)
+    payload_parts = line_splitted[payload_start_index:payload_end_index]
+    for part in payload_parts:
+      if accept_numerical_payload or not re.match('^\\d*$', part):
+        prefix += delimiter + part
+    payload = prefix.replace(ESCAPE_TOKEN, escape_str)
 
     flow_list.append(payload)
 
@@ -80,7 +84,8 @@ if __name__ == '__main__':
 
   payload_end_index = payload_start_index = protocol_index = aggregator_index =\
       -1
-  opts, args = getopt.getopt(sys.argv[1:], 'f:t:p:a:d:e:n:')
+  accept_numerical_payload = False
+  opts, args = getopt.getopt(sys.argv[1:], 'f:t:p:a:d:e:n:x')
   for opt, value in opts:
     if opt == '-f':
       payload_start_index = int(value)
@@ -90,9 +95,11 @@ if __name__ == '__main__':
       protocol_index = int(value)
     elif opt == '-a':
       aggregator_index = int(value)
+    elif opt == '-x':
+      accept_numerical_payload = True
 
   dataset = extract_payload_and_label_from_csv(args[0],
       payload_start_index, payload_end_index,
-      protocol_index, aggregator_index)
+      protocol_index, aggregator_index, accept_numerical_payload)
 
   serialize_dataset(dataset)
