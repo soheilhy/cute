@@ -63,9 +63,19 @@ if __name__ == '__main__':
     print_usage()
     sys.exit(-1)
 
-  opts, args = getopt.getopt(sys.argv, 'ftpd:e:n:')
-  dataset = extract_payload_and_label_from_csv(csv_path=args[1],
-      payload_start_index=opts['f'], payload_end_index=opts['t'],
-      protocol_index=opts['p'])
+
+  payload_end_index = payload_start_index = protocol_index = -1
+  opts, args = getopt.getopt(sys.argv[1:], 'f:t:p:d:e:n:')
+  for opt, value in opts:
+    if opt == '-f':
+      payload_start_index = int(value)
+    elif opt == '-t':
+      payload_end_index = int(value)
+    elif opt == '-p':
+      protocol_index = int(value)
+
+  dataset = extract_payload_and_label_from_csv(args[0],
+      payload_start_index, payload_end_index,
+      protocol_index)
 
   serialize_dataset(dataset)
