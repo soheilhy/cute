@@ -66,10 +66,20 @@ def extract_payload_and_label_from_csv(csv_path, payload_start_index,
 def serialize_dataset(dataset):
   for protocol, flows in dataset.iteritems():
     for flow in flows:
-      print protocol + '|' + flow
+      print(protocol + '|' + flow)
+
+def load_dataset(path, separator='|'):
+  dataset = []
+  for line in open(path):
+    seperator_index = line.find(separator)
+    if seperator_index != -1:
+      protocol = line[0:seperator_index]
+      payload = line[seperator_index+1:]
+      dataset += [(payload, protocol)]
+  return dataset
 
 def print_usage():
-  print ('USAGE: utils.py -f <payload_start_index> -t <payload_end_index>'
+  print('USAGE: utils.py -f <payload_start_index> -t <payload_end_index>'
       '-p <protocol> [-d <delimiter>] [-e <escape_char>]'
       '[-n <flows_per_protocol>] <csv_file>')
 
