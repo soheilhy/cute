@@ -47,14 +47,15 @@ class StringUtils(object):
             current_term += str1[i + k]
           else:
             if len(current_term) >= length_threshold:
-              all_substrings.append(current_term)
+              for i in range(length_threshold, len(current_term) + 1):
+                all_substrings += StringUtils._all_permutations(current_term, i)
             current_term = ''
             break
 
     if cache != None:
       cache[cache_key] = all_substrings
 
-    return all_substrings
+    return sorted(set(all_substrings))
 
   def _hash_string_tuple(str1, str2, length_threshold):
     sorted_strings = sorted([str1, str2])
