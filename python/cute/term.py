@@ -38,19 +38,18 @@ class StringUtils(object):
       if cached_substrings != None:
         return cached_substrings
 
-    term = ''
-    for i in range(min(len(str1), len(str2))):
-      if str1[i] == str2[i]:
-        term += str1[i]
-
     all_substrings = []
-    for i in range(length_threshold, len(term) + 1):
-      all_substrings += StringUtils._all_permutations(term, i)
-    all_substrings = sorted(set(all_substrings +
-        StringUtils.extract_all_common_terms(str1[1:], str2, length_threshold,
-            cache) +
-        StringUtils.extract_all_common_terms(str1, str2[1:], length_threshold,
-            cache)))
+    current_term = ''
+    for i in range(len(str1)):
+      for j in range(len(str2)):
+        for k in range(min(len(str1) - i, len(str2) - j)):
+          if str1[i + k] == str2[j + k]:
+            current_term += str1[i + k]
+          else:
+            if len(current_term) >= length_threshold:
+              all_substrings.append(current_term)
+            current_term = ''
+            break
 
     if cache != None:
       cache[cache_key] = all_substrings
