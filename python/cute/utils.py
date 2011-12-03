@@ -70,7 +70,7 @@ def serialize_dataset(dataset):
 
 def load_dataset(path, separator='|'):
   dataset = []
-  for line in open(path):
+  for line in open(path, encoding='ascii'):
     seperator_index = line.find(separator)
     if seperator_index != -1:
       protocol = line[0:seperator_index]
