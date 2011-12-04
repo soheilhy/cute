@@ -119,12 +119,41 @@ class TermFrequencyUtils(object):
       for protocol, freq in protocol_frequencies.items():
         print(separator.join([protocol, str(freq), term]))
 
+  def prune_terms(path):
+    lines = [line[:-1] for line in open(path)]
+    for line in lines:
+      should_be_prune = False
+      protocol, frequency, term = TermFrequencyUtils._parse_term_line(line)
+      if not term:
+        continue
+      for line2 in lines:
+        protocol2, frequency2, term2 = TermFrequencyUtils._parse_term_line(
+            line2)
+        if not term2:
+          continue
+        if term2.find(term) != -1 and protocol2 == protocol1 and\
+            frequency2 >= frequency1:
+          should_be_prune = True
+          break
+      if not should_be_prune:
+        print(line)
+
+  def _parse_term_line(line, separator='|'):
+    protocol_end = line.find(separator)
+    frequency_end = line.find(separator, protocol_end + 1)
+    if frequency_end == -1 or protocol_end == -1:
+      return (None, None, None)
+    term = line[frequency_end + 1:]
+    frequency = line[protocol_end + 1: frequency_end]
+    protocol = line[:protocol_end]
+    return (protocol, frequency, protocol)
+
 def print_usage():
   print('USAGE: terms.py -t separator -l length_threshold -p payload_length'
         'dataset_path')
 
 if __name__ == '__main__':
-  opts, args = getopt.getopt(sys.argv[1:], 't:l:p:')
+  opts, args = getopt.getopt(sys.argv[1:], 't:l:p:x')
   if len(args) == 0:
     print_usage()
     sys.exit(-1)
@@ -132,6 +161,7 @@ if __name__ == '__main__':
   separator = '|'
   length_threshold = 4
   payload_max_length = 50
+  prune = False
 
   for opt, value in opts:
     if opt == '-t':
@@ -140,9 +170,14 @@ if __name__ == '__main__':
       length_threshold = int(value)
     elif opt == '-p':
       payload_max_length = int(value)
+    elif opt == '-x':
+      prune = True
 
-  dataset = utils.load_dataset(args[0])
-  tf = TermFrequencyUtils.find_common_term_frequencies(
-      dataset, payload_max_length, length_threshold)
-  TermFrequencyUtils.serialize_term_frequencies(tf)
+  if prune:
+    TermFrequencyUtils.prune_terms(args[0])
+  else:
+    dataset = utils.load_dataset(args[0])
+    tf = TermFrequencyUtils.find_common_term_frequencies(
+        dataset, payload_max_length, length_threshold)
+    TermFrequencyUtils.serialize_term_frequencies(tf)
 
