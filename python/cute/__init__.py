@@ -87,12 +87,13 @@ def parse_weighted_term_file(
     rho: The rho constant of the weight function.
   """
   term_frequency_map = dict() # It is a dictionary of
-                              # terms->protocols->frequency.
+                              # protocol->frequency->term
   for line in open(path):
-    line_splitted = line.split(separator)
-    term = line_splitted[0]
-    frequency = line_splitted[1]
-    protocol = line_splitted[2]
+    protocol_end = line.find(separator)
+    frequency_end = line.find(separator, protocol_end + 1)
+    term = line_splitted[frequency_end + 1:]
+    frequency = line_splitted[protocol_end + 1: frequency_end]
+    protocol = line_splitted[0:protocol_end]
     protocol_map = term_frequency_map.get(term, {})
     protocol_map[protocol] = float(frequency)
     term_frequency_map[term] = protocol_map
