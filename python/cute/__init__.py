@@ -89,11 +89,12 @@ def parse_weighted_term_file(
   term_frequency_map = dict() # It is a dictionary of
                               # protocol->frequency->term
   for line in open(path):
+    line = line[:-1]
     protocol_end = line.find(separator)
     frequency_end = line.find(separator, protocol_end + 1)
-    term = line_splitted[frequency_end + 1:]
-    frequency = line_splitted[protocol_end + 1: frequency_end]
-    protocol = line_splitted[0:protocol_end]
+    term = line[frequency_end + 1:]
+    frequency = line[protocol_end + 1: frequency_end]
+    protocol = line[:protocol_end]
     protocol_map = term_frequency_map.get(term, {})
     protocol_map[protocol] = float(frequency)
     term_frequency_map[term] = protocol_map
