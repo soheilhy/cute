@@ -75,6 +75,7 @@ class TermFrequencyUtils(object):
     term_frequencies = {} # A dict from term->protocol->frequency
     protocol_counts = {}
     for i in range(len(data_set)):
+      print(i, end='\r', file=sys.stderr)
       common_terms = []
       payload1, protocol1 = data_set[i]
       payload1 = payload1[0:payload_max_length]
