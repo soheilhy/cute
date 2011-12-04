@@ -56,10 +56,10 @@ class Cute(Classifier):
 
     max_similarity = -1
     best_protocols = []
-    for protocol, list_of_terms in self._weighted_terms.iteritems():
+    for protocol, list_of_terms in self._weighted_terms.items():
       sum_of_weights = 0
       matched_term_count = 0
-      for term, weight in list_of_terms.iteritems():
+      for term, weight in list_of_terms.items():
         if payload.find(term) != -1:
           sum_of_weights += weight
           matched_term_count += 1
@@ -77,7 +77,7 @@ class Cute(Classifier):
 
 def parse_weighted_term_file(
     path, separator='|', top_terms=.1,
-    weight_function=weight.CuteWeightFunction):
+    weight_function=weight.CuteWeightFunction()):
   """ Parses the files for weighted terms of protocols.
 
   Args:

@@ -42,10 +42,10 @@ class CuteWeightFunction(WeightFunction):
       Returns a map from protocol->term->weight.
     '''
     protocol_map = dict()
-    for term, protocol_frequency_map in term_frequency_map.iteritems():
+    for term, protocol_frequency_map in term_frequency_map.items():
       sum_of_frequencies =\
-          sum([freq for protocol, freq in protocol_frequency_map.iteritems()])
-      for protocol, freq in protocol_frequency_map.iteritems():
+          sum([freq for protocol, freq in protocol_frequency_map.items()])
+      for protocol, freq in protocol_frequency_map.items():
         if freq < self._frequency_threshold:
           continue
 
