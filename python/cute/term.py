@@ -123,7 +123,8 @@ class TermFrequencyUtils(object):
     lines = [line[:-1] for line in open(path)]
     i = 0
     for line in lines:
-      print(i+=1, end='\r', file=sys.stderr)
+      i += 1
+      print(i, end='\r', file=sys.stderr)
       should_be_prune = False
       protocol, frequency, term = TermFrequencyUtils._parse_term_line(line)
       if not term:
