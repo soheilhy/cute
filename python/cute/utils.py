@@ -32,7 +32,7 @@ def extract_payload_and_label_from_csv(csv_path, payload_start_index,
 
   prev_aggregator = None
   prev_protocol = None
-  for line in open(csv_path):
+  for line in open(csv_path, encoding='ascii', errors='ignore'):
     line_splitted = line.replace(escape_str, ESCAPE_TOKEN)\
         .split(delimiter)
     if len(line_splitted) <= max(payload_end_index, protocol_index):
