@@ -131,8 +131,8 @@ class TermFrequencyUtils(object):
             line2)
         if not term2:
           continue
-        if term2.find(term) != -1 and protocol2 == protocol1 and\
-            frequency2 >= frequency1:
+        if term2.find(term) != -1 and protocol2 == protocol and\
+            frequency2 >= frequency:
           should_be_prune = True
           break
       if not should_be_prune:
@@ -144,7 +144,7 @@ class TermFrequencyUtils(object):
     if frequency_end == -1 or protocol_end == -1:
       return (None, None, None)
     term = line[frequency_end + 1:]
-    frequency = line[protocol_end + 1: frequency_end]
+    frequency = float(line[protocol_end + 1: frequency_end])
     protocol = line[:protocol_end]
     return (protocol, frequency, protocol)
 
