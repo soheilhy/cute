@@ -114,10 +114,11 @@ class TermFrequencyUtils(object):
         print(separator.join([protocol, str(freq), term]))
 
 def print_usage():
-  print('USAGE: terms.py -t separator dataset_path')
+  print('USAGE: terms.py -t separator -l length_threshold -p payload_length'
+        'dataset_path')
 
 if __name__ == '__main__':
-  opts, args = getopt.getopt(sys.argv[1:], 't:l:')
+  opts, args = getopt.getopt(sys.argv[1:], 't:l:p:')
   if len(args) == 0:
     print_usage()
     sys.exit(-1)
@@ -131,6 +132,8 @@ if __name__ == '__main__':
       separator = value
     elif opt == '-l':
       length_threshold = int(value)
+    elif opt == '-p':
+      payload_max_length = int(value)
 
   dataset = utils.load_dataset(args[0])
   tf = TermFrequencyUtils.find_common_term_frequencies(
