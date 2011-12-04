@@ -92,7 +92,7 @@ def parse_weighted_term_file(
     line = line[:-1]
     protocol_end = line.find(separator)
     frequency_end = line.find(separator, protocol_end + 1)
-    if frequency_end < -1 or protocol_end < -1:
+    if frequency_end == -1 or protocol_end == -1:
       continue
     term = line[frequency_end + 1:]
     frequency = line[protocol_end + 1: frequency_end]
