@@ -72,25 +72,35 @@ class TermFrequencyUtils(object):
   def find_common_term_frequencies(data_set, length_threshold=4):
     term_cache = {}
     term_frequencies = {} # A dict from term->protocol->frequency
+    protocol_counts = {}
     for i in range(len(data_set)):
+      common_terms = []
       payload1, protocol1 = data_set[i]
-      for j in range(i + 1, len(data_set)):
+      protocol_count = protocol_counts.get(protocol1)
+      if protocol_count == None:
+        protocol_count = 0
+      protocol_counts[protocol1] = protocol_count + 1
+
+      for j in range(len(data_set)):
+        if i == j:
+          continue
         payload2, protocol2 = data_set[j]
-        common_terms = StringUtils.extract_all_common_terms(payload1, payload2,
+        common_terms += StringUtils.extract_all_common_terms(payload1, payload2,
             length_threshold, term_cache)
-        for term in common_terms:
-          protocol_frequencies = term_frequencies.get(term)
-          if protocol_frequencies == None:
-            protocol_frequencies = {}
-            term_frequencies[term] = protocol_frequencies
 
-          frequency1 = protocol_frequencies.get(protocol1)
-          protocol_frequencies[protocol1] =\
-              frequency1 + 1 if frequency1 != None else 1
+      for term in set(common_terms):
+        protocol_frequencies = term_frequencies.get(term)
+        if protocol_frequencies == None:
+          protocol_frequencies = {}
+          term_frequencies[term] = protocol_frequencies
 
-          frequency2 = protocol_frequencies.get(protocol2)
-          protocol_frequencies[protocol2] =\
-              frequency2 + 1 if frequency2 != None else 1
+        frequency1 = protocol_frequencies.get(protocol1)
+        protocol_frequencies[protocol1] =\
+            frequency1 + 1 if frequency1 != None else 1
+
+    for term, protocol_frequencies in term_frequencies.items():
+      for protocol, freq in protocol_frequencies.items():
+        protocol_frequencies[protocol] = freq / protocol_counts[protocol]
 
     return term_frequencies
 
