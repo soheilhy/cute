@@ -18,7 +18,7 @@
 __author__ = 'Soheil Hassas Yeganeh <soheil@cs.toronto.edu>'
 
 import abc
-import cute.weight
+from cute import weight
 
 class Classifier(object):
   __metaclass__ = abc.ABCMeta
