@@ -146,7 +146,7 @@ class TermFrequencyUtils(object):
     term = line[frequency_end + 1:]
     frequency = float(line[protocol_end + 1: frequency_end])
     protocol = line[:protocol_end]
-    return (protocol, frequency, protocol)
+    return (protocol, frequency, term)
 
 def print_usage():
   print('USAGE: terms.py -t separator -l length_threshold -p payload_length'
