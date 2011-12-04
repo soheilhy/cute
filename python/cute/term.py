@@ -26,7 +26,9 @@ import utils
 class StringUtils(object):
   def extract_all_common_terms(str1, str2, length_threshold=4,
       cache=None):
-    if min(len(str1), len(str2)) < length_threshold:
+    str_len1 = len(str1)
+    str_len2 = len(str2)
+    if min(str_len1, str_len2) < length_threshold:
       return []
 
     if not str1 or not str2:
@@ -40,16 +42,19 @@ class StringUtils(object):
 
     all_substrings = []
     current_term = ''
-    for i in range(len(str1)):
-      for j in range(len(str2)):
-        for k in range(min(len(str1) - i, len(str2) - j)):
+    current_term_len = 0
+    for i in range(str_len1):
+      for j in range(str_len2):
+        for k in range(min(str_len1 - i, str_len2 - j)):
           if str1[i + k] == str2[j + k]:
             current_term += str1[i + k]
+            current_term_len += 1
           else:
-            if len(current_term) >= length_threshold:
-              for i in range(length_threshold, len(current_term) + 1):
+            if current_term_len >= length_threshold:
+              for i in range(length_threshold, current_term_len + 1):
                 all_substrings += StringUtils._all_permutations(current_term, i)
             current_term = ''
+            current_term_len = 0
             break
 
     if cache != None:
@@ -74,7 +79,8 @@ class TermFrequencyUtils(object):
     term_cache = {}
     term_frequencies = {} # A dict from term->protocol->frequency
     protocol_counts = {}
-    for i in range(len(data_set)):
+    dataset_len = len(data_set)
+    for i in range(dataset_len):
       print(i, end='\r', file=sys.stderr)
       common_terms = []
       payload1, protocol1 = data_set[i]
@@ -84,7 +90,7 @@ class TermFrequencyUtils(object):
         protocol_count = 0
       protocol_counts[protocol1] = protocol_count + 1
 
-      for j in range(len(data_set)):
+      for j in range(dataset_len):
         if i == j:
           continue
         payload2, protocol2 = data_set[j]
