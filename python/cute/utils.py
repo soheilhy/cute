@@ -92,8 +92,8 @@ if __name__ == '__main__':
     sys.exit(-1)
 
 
-  payload_end_index = payload_start_index = protocol_index = aggregator_index =\
-      -1
+  payload_end_index = payload_start_index = protocol_index = -1
+  aggregator_index = None
   accept_numerical_payload = False
   opts, args = getopt.getopt(sys.argv[1:], 'f:t:p:a:d:e:n:x')
   for opt, value in opts:
