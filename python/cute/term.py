@@ -127,6 +127,8 @@ class TermFrequencyUtils(object):
       if not term:
         continue
       for line2 in lines:
+        if line == lines:
+          continue
         protocol2, frequency2, term2 = TermFrequencyUtils._parse_term_line(
             line2)
         if not term2:
