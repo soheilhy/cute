@@ -69,13 +69,15 @@ class StringUtils(object):
     return [term for term in terms if text.find(term) != -1]
 
 class TermFrequencyUtils(object):
-  def find_common_term_frequencies(data_set, length_threshold=4):
+  def find_common_term_frequencies(data_set, payload_max_length=50,
+      length_threshold=4):
     term_cache = {}
     term_frequencies = {} # A dict from term->protocol->frequency
     protocol_counts = {}
     for i in range(len(data_set)):
       common_terms = []
       payload1, protocol1 = data_set[i]
+      payload1 = payload1[0:payload_max_length]
       protocol_count = protocol_counts.get(protocol1)
       if protocol_count == None:
         protocol_count = 0
@@ -85,6 +87,7 @@ class TermFrequencyUtils(object):
         if i == j:
           continue
         payload2, protocol2 = data_set[j]
+        payload2 = payload2[0:payload_max_length]
         common_terms += StringUtils.extract_all_common_terms(payload1, payload2,
             length_threshold, term_cache)
 
@@ -120,6 +123,7 @@ if __name__ == '__main__':
 
   separator = '|'
   length_threshold = 4
+  payload_max_length = 50
 
   for opt, value in opts:
     if opt == '-t':
@@ -129,6 +133,6 @@ if __name__ == '__main__':
 
   dataset = utils.load_dataset(args[0])
   tf = TermFrequencyUtils.find_common_term_frequencies(
-      dataset, length_threshold)
+      dataset, payload_max_length, length_threshold)
   TermFrequencyUtils.serialize_term_frequencies(tf)
 
