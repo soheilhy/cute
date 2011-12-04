@@ -64,7 +64,7 @@ def extract_payload_and_label_from_csv(csv_path, payload_start_index,
   return protocol_to_flow_map
 
 def serialize_dataset(dataset):
-  for protocol, flows in dataset.iteritems():
+  for protocol, flows in dataset.items():
     for flow in flows:
       print(protocol + '|' + flow)
 
