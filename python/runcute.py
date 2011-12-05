@@ -36,7 +36,7 @@ if __name__ == '__main__':
 
   if log_weighted_terms:
     for protocol, protocol_wterms in weighted_terms.items():
-      for term, weight in protocol_wterms:
+      for term, weight in protocol_wterms.items():
         print('%s|%s|%d' % (protocol, term, weight), file=sys.stderr)
     sys.exit(0)
 
