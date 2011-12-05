@@ -8,8 +8,8 @@ def print_usage():
   print('USAGE: runcute.py -t top_terms -r rho -f frequency_threshold')
 
 if __name__ == '__main__':
-  opts, args = getopt.getopt(sys.argv[1:], 't:r:f:l:')
-  if len(args) != 2:
+  opts, args = getopt.getopt(sys.argv[1:], 't:r:f:l')
+  if len(args) != 1:
     print_usage()
     sys.exit(-1)
 
