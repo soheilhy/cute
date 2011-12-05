@@ -35,12 +35,11 @@ if __name__ == '__main__':
   weighted_terms = cute.parse_weighted_term_file(tf_file, top_terms=top_terms,
       weight_function=cute.weight.CuteWeightFunction(rho, frequency_threshold))
 
-  print('BEGIN Weighted terms')
   if log_weighted_terms:
     for protocol, protocol_wterms in weighted_terms.items():
       for term, weight in protocol_wterms:
         print('%s|%s|%d' % (protocol, term, weight), file=sys.stderr)
-  print('END Weighted terms')
+    return
 
   c = cute.Cute(weighted_terms)
   i = 0
