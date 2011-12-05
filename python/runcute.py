@@ -32,6 +32,7 @@ if __name__ == '__main__':
   weighted_terms = cute.parse_weighted_term_file(tf_file, top_terms=top_terms,
       weight_function=cute.weight.CuteWeightFunction(rho, frequency_threshold))
   c = cute.Cute(weighted_terms)
+  i = 0
   for data in open(dataset, errors='ignore', encoding='ascii'):
     data = data[:-1]
     protocol_end = data.find('|')
@@ -39,3 +40,5 @@ if __name__ == '__main__':
     payload = data[protocol_end + 1:]
 
     print('%s|%s|%s' % (protocol, str(c.classify(payload)), payload))
+    i += 1
+    print(i, end='\r', file=sys.stderr)
