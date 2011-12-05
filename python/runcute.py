@@ -8,7 +8,7 @@ def print_usage():
   print('USAGE: runcute.py -t top_terms -r rho -f frequency_threshold')
 
 if __name__ == '__main__':
-  opts, args = getopt.getopt(sys.argv[1:], 't:r:f:')
+  opts, args = getopt.getopt(sys.argv[1:], 't:r:f:l:')
   if len(args) != 2:
     print_usage()
     sys.exit(-1)
@@ -17,6 +17,7 @@ if __name__ == '__main__':
   top_terms = .1
   frequency_threshold = .1
   rho = 16
+  log_weighted_terms = False
 
   for opt, value in opts:
     if opt == '-t':
@@ -25,12 +26,22 @@ if __name__ == '__main__':
       frequency_threshold = float(value)
     elif opt == '-r':
       rho = float(value)
+    elif opt == '-l':
+      log_weighted_terms = True
 
   tf_file = args[0]
   dataset = args[1]
 
   weighted_terms = cute.parse_weighted_term_file(tf_file, top_terms=top_terms,
       weight_function=cute.weight.CuteWeightFunction(rho, frequency_threshold))
+
+  print('BEGIN Weighted terms')
+  if log_weighted_terms:
+    for protocol, protocol_wterms in weighted_terms.items():
+      for term, weight in protocol_wterms:
+        print('%s|%s|%d' % (protocol, term, weight), file=sys.stderr)
+  print('END Weighted terms')
+
   c = cute.Cute(weighted_terms)
   i = 0
   for data in open(dataset, errors='ignore', encoding='ascii'):
