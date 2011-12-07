@@ -7,9 +7,9 @@ if [ -z "$FILE_NAME" ] || [ -z "$PROTOCOL" ]; then
   echo "./results <classification_file> <protocol>"
 fi
 
-TOTAL=`grep "^$PROTOCOL|" FILE_NAME | wc -l`
-CORRECT=`grep "^$PROTOCOL|\['$PROTOCOL'\]" FILE_NAME | wc -l`
-DETECTED=`grep "|\['$PROTOCOL'\]" FILE_NAME | wc -l`
+TOTAL=`grep "^$PROTOCOL|" $FILE_NAME | wc -l`
+CORRECT=`grep "^$PROTOCOL|\['$PROTOCOL'\]" $FILE_NAME | wc -l`
+DETECTED=`grep "|\['$PROTOCOL'\]" $FILE_NAME | wc -l`
 
 let "RECALL = $CORRECT / $TOTAL"
 let "PRECISION = $CORRECT / $DETECTED"
