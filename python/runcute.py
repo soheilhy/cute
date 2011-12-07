@@ -9,7 +9,7 @@ def print_usage():
 
 if __name__ == '__main__':
   opts, args = getopt.getopt(sys.argv[1:], 't:r:f:l')
-  if len(args) != 1:
+  if len(args) < 1:
     print_usage()
     sys.exit(-1)
 
