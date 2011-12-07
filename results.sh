@@ -11,8 +11,8 @@ TOTAL=`grep "^$PROTOCOL|" $FILE_NAME | wc -l`
 CORRECT=`grep "^$PROTOCOL|\['$PROTOCOL'\]" $FILE_NAME | wc -l`
 DETECTED=`grep "|\['$PROTOCOL'\]" $FILE_NAME | wc -l`
 
-let "RECALL = $CORRECT / $TOTAL"
-let "PRECISION = $CORRECT / $DETECTED"
+RECALL=`echo "scale=10; $CORRECT/$TOTAL" | bc`
+PRECISION=`echo "scale=10; $CORRECT/$DETECTED" | bc`
 
 echo "RECALL: $RECALL"
 echo "PRECISION: $PRECISION"
