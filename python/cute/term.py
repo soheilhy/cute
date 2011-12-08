@@ -177,7 +177,7 @@ def print_usage():
         'dataset_path')
 
 if __name__ == '__main__':
-  opts, args = getopt.getopt(sys.argv[1:], 't:l:p:x')
+  opts, args = getopt.getopt(sys.argv[1:], 't:l:p:xc')
   if len(args) == 0:
     print_usage()
     sys.exit(-1)
