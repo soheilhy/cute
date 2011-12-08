@@ -155,7 +155,7 @@ class TermFrequencyUtils(object):
   def multiply_by_count(term_frequency_file, dataset):
     protocol_count = TermFrequencyUtils._count_flows_of_protocols(dataset)
     for line in open(term_frequency_file):
-      splitted = line.split('|')
+      splitted = line[:-1].split('|')
       protocol = splitted[0]
       freq = float(splitted[1])
       freq *= protocol_count[protocol]
