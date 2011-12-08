@@ -41,7 +41,13 @@ class CuteWeightFunction(WeightFunction):
     Returns:
       Returns a map from protocol->term->weight.
     '''
-    protocol_map = dict()
+    protocol_term_count = dict()
+    for term, protocol_frequency_map in term_frequency_map.items():
+      for protocol, freq in protocol_frequency_map.items():
+        p_count = protocol_term_count.get(protocol)
+        protocol_term_count[protocol] = p_count + 1 if p_count != None else 1
+
+    protocol_map = {}
     for term, protocol_frequency_map in term_frequency_map.items():
       sum_of_frequencies =\
           sum([freq for protocol, freq in protocol_frequency_map.items()])
