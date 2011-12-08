@@ -19,6 +19,7 @@
 __author__ = 'Soheil Hassas Yeganeh <soheil@cs.toronto.edu>'
 
 import getopt
+import math
 import sys
 
 import utils
@@ -158,7 +159,7 @@ class TermFrequencyUtils(object):
       protocol = splitted[0]
       freq = float(splitted[1])
       freq *= protocol_count[protocol]
-      splitted[1] = str(freq)
+      splitted[1] = str(math.ceil(freq))
       print('|'.join(splitted))
 
   def _parse_term_line(line, separator='|'):
