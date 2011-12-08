@@ -143,6 +143,25 @@ class TermFrequencyUtils(object):
       if not should_be_prune:
         print(line)
 
+  def multiply_by_count(term_frequency_file, dataset):
+    protocol_count = _count_flows_of_protocols(dataset)
+    for line in open(term_frequency_file):
+      splitted = line.split('|')
+      protocol = splitted[0]
+      freq = float(splitted[1])
+      freq *= protocol_count[protocol]
+      splitted[1] = str(freq)
+      print('|'.join(splitted))
+
+  def _count_flows_of_protocols(dataset):
+    count = {}
+    for line in open(dataset, encoding='ascii', errors='ignore'):
+      splitted = line.split('|')
+      p_count = count.get(splitted[0])
+      count[splitted[0]] = p_count + 1 if p_count != None else 1
+    return count
+
+
   def _parse_term_line(line, separator='|'):
     protocol_end = line.find(separator)
     frequency_end = line.find(separator, protocol_end + 1)
@@ -167,6 +186,7 @@ if __name__ == '__main__':
   length_threshold = 4
   payload_max_length = 50
   prune = False
+  count = True
 
   for opt, value in opts:
     if opt == '-t':
@@ -177,9 +197,13 @@ if __name__ == '__main__':
       payload_max_length = int(value)
     elif opt == '-x':
       prune = True
+    elif opt == '-c':
+      count = True
 
   if prune:
     TermFrequencyUtils.prune_terms(args[0])
+  elif count:
+    TermFrequencyUtils.multiply_by_count(args[0], args[1])
   else:
     dataset = utils.load_dataset(args[0])
     tf = TermFrequencyUtils.find_common_term_frequencies(
