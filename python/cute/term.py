@@ -186,7 +186,7 @@ if __name__ == '__main__':
   length_threshold = 4
   payload_max_length = 50
   prune = False
-  count = True
+  count = False
 
   for opt, value in opts:
     if opt == '-t':
