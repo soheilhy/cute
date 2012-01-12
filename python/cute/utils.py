@@ -53,7 +53,7 @@ def extract_payload_and_label_from_csv(csv_path, payload_start_index,
       else:
         prev_aggregator = aggregator
         prev_protocol = protocol
-    payload_parts = line_splitted[payload_start_index:payload_end_index]
+    payload_parts = line_splitted[payload_start_index:payload_end_index + 1]
     for part in payload_parts:
       if accept_numerical_payload or not re.match('^\\d*$', part):
         prefix += delimiter + part
