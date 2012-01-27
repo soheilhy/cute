@@ -113,3 +113,55 @@ if __name__ == '__main__':
       protocol_index, aggregator_index, accept_numerical_payload)
 
   serialize_dataset(dataset)
+
+class Trie(object):
+  def __init__(self):
+    self._trie_dict = dict()
+    self._protocol_count = dict()
+
+  def add(self, term):
+    if len(term) == 0:
+      return
+
+    ch = term[0]
+    next_level = self._trie_dict.get(ch)
+    if not next_level:
+      next_level = Trie()
+      self._trie_dict[ch] = next_level
+
+    next_level.add(term[1:])
+
+  def contains(self, term):
+    if len(term) == 0:
+      return self
+
+    ch = term[0]
+    next_level = self._trie_dict.get(ch);
+
+    return next_level.contains(term[1:]) if next_level else False
+
+  def inc_if_contains(self, term, protocol):
+    last_trie = self.contains(term)
+    if not last_trie:
+      return
+
+    count = last_trie._protocol_count.get(protocol, 0)
+    last_trie._protocol_count[protocol] = count + 1
+
+    if len(term) == 0:
+      return True
+
+  def get_protocol_counts(self, term):
+    trie = self.contains(term)
+    return trie._protocol_count if trie else dict()
+
+  def get_protocol_count(self, term, protocol):
+    return self.get_protocol_counts(term).get(protocol)
+
+  def print_protocol_counts(self, prefix=''):
+    for protocol, count in self._protocol_count.items():
+      print('%s|%d|%s' % (protocol, count, prefix))
+
+    for ch, trie in self._trie_dict.items():
+      trie.print_protocol_counts(prefix + ch)
+
