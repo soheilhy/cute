@@ -131,17 +131,33 @@ class Trie(object):
 
     next_level.add(term[1:])
 
-  def contains(self, term):
-    if len(term) == 0:
+  def contains(self, term, i, j):
+    if i >= j:
       return self
 
-    ch = term[0]
+    if len(term) <= i:
+      return None
+
+
+    ch = term[i]
     next_level = self._trie_dict.get(ch);
 
-    return next_level.contains(term[1:]) if next_level else False
+    return next_level.contains(term, i+1, j) if next_level else False
 
-  def inc_if_contains(self, term, protocol):
-    last_trie = self.contains(term)
+  def inc_substrings(self, term, protocol, start, to, len_threshold):
+    last_trie = self
+    for i in range(start, to):
+      ch = term[i]
+      last_trie = last_trie._trie_dict.get(ch)
+      if last_trie:
+        if i - start + 1 >= len_threshold:
+          count = last_trie._protocol_count.get(protocol, 0)
+          last_trie._protocol_count[protocol] = count + 1
+      else:
+        return
+
+  def inc_if_contains(self, term, protocol, i, j):
+    last_trie = self.contains(term, i, j)
     if not last_trie:
       return
 
@@ -158,10 +174,14 @@ class Trie(object):
   def get_protocol_count(self, term, protocol):
     return self.get_protocol_counts(term).get(protocol)
 
-  def print_protocol_counts(self, prefix=''):
+  def print_protocol_counts(self, prefix='', p_count=None):
     for protocol, count in self._protocol_count.items():
-      print('%s|%d|%s' % (protocol, count, prefix))
+      if p_count and p_count.get(protocol):
+        count = float(count) / float(p_count[protocol])
+        print('%s|%.5f|%s' % (protocol, min(1, count), prefix))
+      else:
+        print('%s|%d|%s' % (protocol, count, prefix))
 
     for ch, trie in self._trie_dict.items():
-      trie.print_protocol_counts(prefix + ch)
+      trie.print_protocol_counts(prefix + ch, p_count=p_count)
 
