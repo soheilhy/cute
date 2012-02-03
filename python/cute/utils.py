@@ -119,7 +119,7 @@ class Trie(object):
     self._trie_dict = dict()
     self._protocol_count = dict()
 
-  def add(self, term):
+  def add(self, term, func=None):
     if len(term) == 0:
       return
 
@@ -129,7 +129,10 @@ class Trie(object):
       next_level = Trie()
       self._trie_dict[ch] = next_level
 
-    next_level.add(term[1:])
+    if func:
+      func(next_level, term)
+
+    next_level.add(term[1:], func)
 
   def contains(self, term):
     if len(term) == 0:
