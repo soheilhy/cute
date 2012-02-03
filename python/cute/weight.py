@@ -45,7 +45,7 @@ class CuteWeightFunction(WeightFunction):
     for term, protocol_frequency_map in term_frequency_map.items():
       for protocol, freq in protocol_frequency_map.items():
         p_count = protocol_term_count.get(protocol)
-        protocol_term_count[protocol] = p_count + 1 if p_count != None else 1
+        protocol_term_count[protocol] = p_count + freq if p_count != None else 1
 
     protocol_map = {}
     for term, protocol_frequency_map in term_frequency_map.items():
@@ -57,6 +57,7 @@ class CuteWeightFunction(WeightFunction):
 
         weighted_term_list = protocol_map.get(protocol, dict())
         weighted_term_list[term] = pow(freq / sum_of_frequencies, self._rho)
+    #    weighted_term_list[term] =  freq / (1 + min(freq, protocol_term_count[protocol] - freq, sum_of_frequencies - freq))
         protocol_map[protocol] = weighted_term_list
     return protocol_map
 
