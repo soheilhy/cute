@@ -118,6 +118,7 @@ class Trie(object):
   def __init__(self):
     self._trie_dict = dict()
     self._protocol_count = dict()
+    self._print_protocol = dict()
 
   def add(self, term, func=None):
     if len(term) == 0:
@@ -177,14 +178,18 @@ class Trie(object):
   def get_protocol_count(self, term, protocol):
     return self.get_protocol_counts(term).get(protocol)
 
-  def print_protocol_counts(self, prefix='', p_count=None):
+  def print_protocol_counts(self, prefix='', p_count=None,
+                            use_print_flag=False):
     for protocol, count in self._protocol_count.items():
+      if use_print_flag and not self._print_protocol.get(protocol):
+        continue
       if p_count and p_count.get(protocol):
         count = float(count) / float(p_count[protocol])
         print('%s|%.5f|%s' % (protocol, min(1, count), prefix))
       else:
-        print('%s|%d|%s' % (protocol, count, prefix))
+        print('%s|%.5f|%s' % (protocol, count, prefix))
 
     for ch, trie in self._trie_dict.items():
-      trie.print_protocol_counts(prefix + ch, p_count=p_count)
+      trie.print_protocol_counts(prefix + ch, p_count=p_count,
+                                 use_print_flag=use_print_flag)
 
